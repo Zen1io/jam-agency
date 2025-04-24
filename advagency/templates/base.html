@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Сайт{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="/accounts/profile/">Профиль</a> | 
+        <a href="/orders/create/">Новая заявка</a>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>
