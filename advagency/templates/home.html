@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1 class="display-4">Добро пожаловать в AdvAgency</h1>
+    <p class="lead">Создавайте заказы, управляйте проектами, и экономьте время.</p>
+    <a href="{% url 'create_order' %}" class="btn btn-primary btn-lg mt-3">Создать заказ</a>
+  </div>
+{% endblock %}
