@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">Профиль пользователя</h1>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ form.first_name.label_tag }} {{ form.first_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.last_name.label_tag }} {{ form.last_name }}
+        </div>
+        <div class="mb-3">
+          {{ form.email.label_tag }} {{ form.email }}
+        </div>
+        <div class="mb-3">
+          <label for="id_phone_number" class="form-label">Телефон:</label>
+          {{ form.phone_number }}
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </form>
+    </div>
+  </div>
+
+  <h2 class="mb-3">Мои заказы</h2>
+
+  {% if orders %}
+    <ul class="list-group">
+      {% for order in orders %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ order.service.title }}
+          <span class="badge bg-secondary">{{ order.material }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      Нет заказов
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="card shadow rounded-4">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Оформление заявки на: {{ service.title }}</h2>
+
+      <form method="post" class="row g-3">
+        {% csrf_token %}
+
+        <div class="col-12">
+          <label for="material" class="form-label fw-bold">Выбор материала</label>
+          {{ form.material|add_class:"form-select" }}
+        </div>
+
+        <div class="col-md-6">
+          <label for="{{ form.client_name.id_for_label }}" class="form-label fw-bold">Имя клиента</label>
+          {{ form.client_name|add_class:"form-control" }}
+        </div>
+
+        <div class="col-md-6">
+          <label for="{{ form.phone.id_for_label }}" class="form-label fw-bold">Телефон</label>
+          {{ form.phone|add_class:"form-control" }}
+        </div>
+
+        <div class="col-12">
+          <label for="{{ form.comment.id_for_label }}" class="form-label fw-bold">Комментарий</label>
+          {{ form.comment|add_class:"form-control" }}
+        </div>
+
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-primary btn-lg mt-3 px-5">Отправить заявку</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const materialOptions = {
+    billboard: ['banner_fabric', 'mesh', 'lightbox_film'],
+    stand: ['pvc', 'plastic', 'composite'],
+    showcase: ['vinyl', 'perforated_vinyl', 'uv_acrylic'],
+    car_wrap: ['vinyl_gloss', 'vinyl_matte', 'vinyl_special'],
+    facade_banner: ['reinforced_banner', 'mesh', 'blockout'],
+    letters: ['acrylic', 'plastic', 'metal', 'composite_led'],
+  };
+
+  const materialLabels = {
+    banner_fabric: 'Баннерная ткань',
+    mesh: 'Сетка',
+    lightbox_film: 'Лайтбокс-плёнка',
+    pvc: 'ПВХ',
+    plastic: 'Пластик',
+    composite: 'Композит',
+    vinyl: 'Винил',
+    perforated_vinyl: 'Перфорированная плёнка',
+    uv_acrylic: 'УФ печать на акриле',
+    vinyl_gloss: 'Винил глянец',
+    vinyl_matte: 'Винил матовый',
+    vinyl_special: 'Винил спецэффект',
+    reinforced_banner: 'Прочный баннер',
+    blockout: 'Блок-аут',
+    acrylic: 'Акрил',
+    metal: 'Металл',
+    composite_led: 'Композит с подсветкой',
+  };
+
+  const serviceCode = "{{ service.code|escapejs }}";
+  const materialSelect = document.getElementById('id_material');
+  if (materialOptions[serviceCode]) {
+    materialSelect.innerHTML = ''; // очистка
+    materialOptions[serviceCode].forEach(material => {
+      const option = document.createElement('option');
+      option.value = material;
+      option.text = materialLabels[material];
+      materialSelect.appendChild(option);
+    });
+  }
+</script>
+
+{% endblock %}
+

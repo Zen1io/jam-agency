@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Оформление заявки</h2>
+
+<p><strong>Вы выбрали услугу:</strong> {{ service.title }}</p>
+
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Отправить заявку</button>
+</form>
+
+{% endblock %}

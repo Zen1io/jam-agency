@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Ваш профиль</h2>
+  {% if orders %}
+    <ul class="list-group">
+      {% for order in orders %}
+        <li class="list-group-item">
+          <strong>{{ order.service_type }}</strong> — {{ order.price }} руб.
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">У вас пока нет заказов.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
