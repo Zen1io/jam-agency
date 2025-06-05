@@ -3,9 +3,40 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
+<div class="container py-5">
   <div class="text-center">
-    <h1 class="display-4">Добро пожаловать в AdvAgency</h1>
-    <p class="lead">Создавайте заказы, управляйте проектами, и экономьте время.</p>
-    <a href="{% url 'create_order' service.id %}" class="btn btn-primary mt-auto">Оставить заявку</a>
+    <h1 class="display-4 fw-bold">Добро пожаловать в "Джем"</h1>
+    <p class="lead text-secondary">Мы создаём наружную рекламу, которую точно замечают.</p>
+    <div class="mt-4">
+      <a href="{% url 'calculator' %}" class="btn btn-lg text-white" style="background-color: #FF6A00;">Рассчитать стоимость</a>
+      <a href="{% url 'services' %}" class="btn btn-lg btn-outline-dark ms-3">Наши услуги</a>
+    </div>
   </div>
+
+  <hr class="my-5">
+
+  <div class="row text-center">
+    <div class="col-md-4 mb-4">
+      <div class="border rounded shadow-sm p-4 h-100">
+        <h5>Портфолио</h5>
+        <p>Посмотрите наши работы и убедитесь в качестве</p>
+        <a href="{% url 'portfolio' %}" class="btn btn-sm btn-outline-dark">Смотреть</a>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="border rounded shadow-sm p-4 h-100">
+        <h5>Калькулятор</h5>
+        <p>Рассчитайте стоимость баннера, стенда и других конструкций</p>
+        <a href="{% url 'calculator' %}" class="btn btn-sm btn-outline-dark">Перейти</a>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="border rounded shadow-sm p-4 h-100">
+        <h5>Предпросмотр рекламы</h5>
+        <p>Протестируйте свой макет</p>
+        <a href="{% url 'billboard_preview' %}" class="btn btn-sm btn-outline-dark">Открыть</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

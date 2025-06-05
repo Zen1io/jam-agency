@@ -2,49 +2,59 @@
 {% load static %}
 {% block title %}Калькулятор{% endblock %}
 {% block content %}
+<div class="container py-4">
+  <h1 class="mb-4 text-center fw-bold">Калькулятор стоимости</h1>
 
-<h1 class="mb-4">Калькулятор стоимости</h1>
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+    <form method="post" class="row g-4">
+      {% csrf_token %}
 
-<form method="post" class="row g-3">
-  {% csrf_token %}
-  <div class="col-md-6">
-    <label for="service_type" class="form-label">Тип услуги</label>
-    <select name="service_type" id="service_type" class="form-select" required>
-      <option value="billboard" {% if selected_service == 'billboard' %}selected{% endif %}>Биллборд</option>
-      <option value="stand" {% if selected_service == 'stand' %}selected{% endif %}>Штендер</option>
-      <option value="showcase" {% if selected_service == 'showcase' %}selected{% endif %}>Оформление витрин</option>
-      <option value="car_wrap" {% if selected_service == 'car_wrap' %}selected{% endif %}>Оклейка автомобилей</option>
-      <option value="facade_banner" {% if selected_service == 'facade_banner' %}selected{% endif %}>Баннер на фасаде</option>
-      <option value="letters" {% if selected_service == 'letters' %}selected{% endif %}>Объёмные буквы</option>
-    </select>
+      <div class="col-md-6">
+        <label for="service_type" class="form-label fw-semibold">Тип услуги</label>
+        <select name="service_type" id="service_type" class="form-select" required>
+          <option value="billboard" {% if selected_service == 'billboard' %}selected{% endif %}>Биллборд</option>
+          <option value="stand" {% if selected_service == 'stand' %}selected{% endif %}>Штендер</option>
+          <option value="showcase" {% if selected_service == 'showcase' %}selected{% endif %}>Оформление витрин</option>
+          <option value="car_wrap" {% if selected_service == 'car_wrap' %}selected{% endif %}>Оклейка автомобилей</option>
+          <option value="facade_banner" {% if selected_service == 'facade_banner' %}selected{% endif %}>Баннер на фасаде</option>
+          <option value="letters" {% if selected_service == 'letters' %}selected{% endif %}>Объёмные буквы</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label for="width" class="form-label fw-semibold">Ширина (м)</label>
+        <input type="number" step="0.01" name="width" id="width" class="form-control" required value="{{ width }}">
+      </div>
+
+      <div class="col-md-3">
+        <label for="height" class="form-label fw-semibold">Высота (м)</label>
+        <input type="number" step="0.01" name="height" id="height" class="form-control" required value="{{ height }}">
+      </div>
+
+      <div class="col-md-6">
+        <label for="material" class="form-label fw-semibold">Материал</label>
+        <select name="material" id="material" class="form-select" required></select>
+      </div>
+
+      <div class="col-12 text-end">
+        <button type="submit" class="btn text-white px-4" style="background-color: #FF6A00;">Рассчитать</button>
+      </div>
+    </form>
   </div>
 
-  <div class="col-md-3">
-    <label for="width" class="form-label">Ширина (м)</label>
-    <input type="number" step="0.01" name="width" id="width" class="form-control" required value="{{ width }}">
+  {% if result %}
+  <div class="mt-4 p-4 text-center rounded-4" style="background-color: #FF6A00; color: white; font-size: 1.5rem;">
+    <strong>Примерная стоимость:</strong> {{ result }} ₽
   </div>
+  {% endif %}
+</div>
 
-  <div class="col-md-3">
-    <label for="height" class="form-label">Высота (м)</label>
-    <input type="number" step="0.01" name="height" id="height" class="form-control" required value="{{ height }}">
-  </div>
-
-  <div class="col-md-6">
-    <label for="material" class="form-label">Материал</label>
-    <select name="material" id="material" class="form-select" required></select>
-  </div>
-
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Рассчитать</button>
-  </div>
-</form>
-
-{% if result %}
-  <div class="alert alert-info mt-4">
-    <h4>Примерная стоимость: {{ result }} ₽</h4>
-  </div>
-{% endif %}
+<!-- Стили -->
+<style>
+  .btn:hover {
+    background-color: #e65a00 !important;
+  }
+</style>
 
 <script src="{% static 'pricing/js/dynamic_materials.js' %}"></script>
-
 {% endblock %}

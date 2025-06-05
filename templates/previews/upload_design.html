@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% get_media_prefix as MEDIA_URL %}
+
+{% block title %}Предпросмотр макета{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4 text-center fw-bold">Предпросмотр макета на конструкции</h2>
+
+  <div class="card shadow-sm mb-4 p-3 border-0 rounded-4">
+    <div class="text-center">
+      <canvas id="billboardCanvas" width="800" height="500" class="rounded border" style="max-width: 100%;"></canvas>
+    </div>
+  </div>
+
+  <form id="previewForm" class="p-4 bg-white border rounded-4 shadow-sm">
+    <div class="mb-3">
+      <label for="typeSelect" class="form-label fw-semibold">Тип конструкции:</label>
+      <select class="form-select" id="typeSelect">
+        <option value="billboard">Билборд</option>
+        <option value="facade_banner">Баннер на фасаде</option>
+        <option value="sten">Штендер</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="designInput" class="form-label fw-semibold">Файл макета (JPG/PNG):</label>
+      <input class="form-control" type="file" id="designInput" accept="image/*">
+    </div>
+
+    <div class="text-end">
+      <button type="button" class="btn text-white px-4" style="background-color: #FF6A00;" onclick="generatePreview()">Предпросмотр</button>
+    </div>
+  </form>
+</div>
+
+<style>
+  canvas {
+    background-color: #f8f9fa;
+  }
+
+  .form-label {
+    color: #333;
+  }
+
+  .btn:hover {
+    background-color: #e65a00 !important;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('billboardCanvas');
+  const ctx = canvas.getContext('2d');
+  let currentBg = new Image();
+
+  const templates = {
+    billboard: {
+      bg: "/media/previews/billboard_template.jpeg",
+      x: 155, y: 65, w: 345, h: 165
+    },
+    facade_banner: {
+      bg: "/media/previews/facade_banner_template.jpeg",
+      x: 390, y: 100, w: 127, h: 190
+    },
+    sten: {
+      bg: "/media/previews/sten.jpeg",
+      x: 300, y: 148, w: 240, h: 225
+    }
+  };
+
+  function loadBackground(type) {
+    return new Promise((resolve, reject) => {
+      const config = templates[type];
+      currentBg = new Image();
+      currentBg.crossOrigin = "anonymous";
+      currentBg.src = config.bg;
+      currentBg.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(currentBg, 0, 0, canvas.width, canvas.height);
+        resolve();
+      };
+      currentBg.onerror = () => reject('Ошибка загрузки фона');
+    });
+  }
+
+  function generatePreview() {
+    const type = document.getElementById('typeSelect').value;
+    const input = document.getElementById('designInput');
+    const file = input.files[0];
+    if (!file) {
+      alert("Пожалуйста, выберите изображение.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const overlay = new Image();
+      overlay.onload = function () {
+        const cfg = templates[type];
+        ctx.drawImage(currentBg, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(overlay, cfg.x, cfg.y, cfg.w, cfg.h);
+      };
+      overlay.src = e.target.result;
+    };
+
+    loadBackground(type)
+      .then(() => reader.readAsDataURL(file))
+      .catch(err => alert(err));
+  }
+
+  document.getElementById('typeSelect').addEventListener('change', function () {
+    const selectedType = this.value;
+    loadBackground(selectedType).catch(err => alert(err));
+  });
+
+  window.onload = () => {
+    loadBackground('billboard');
+  };
+</script>
+{% endblock %}
+

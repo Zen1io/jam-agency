@@ -1,45 +1,100 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <h1 class="mb-4">Профиль пользователя</h1>
+<div class="container mt-5">
+  <h1 class="mb-4 text-center fw-bold">Профиль пользователя</h1>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
+  <!-- Карточка формы -->
+  <div class="card border-0 shadow-sm mb-5 rounded-4">
+    <div class="card-body p-4">
+      <h4 class="mb-4">Личные данные</h4>
       <form method="post">
         {% csrf_token %}
-        <div class="mb-3">
-          {{ form.first_name.label_tag }} {{ form.first_name }}
+        <div class="row g-3">
+          <div class="col-md-6">
+            {{ form.first_name.label_tag }} {{ form.first_name }}
+          </div>
+          <div class="col-md-6">
+            {{ form.last_name.label_tag }} {{ form.last_name }}
+          </div>
+          <div class="col-md-6">
+            {{ form.email.label_tag }} {{ form.email }}
+          </div>
+          <div class="col-md-6">
+            <label for="id_phone_number" >Телефон:</label>
+            {{ form.phone_number }}
+          </div>
         </div>
-        <div class="mb-3">
-          {{ form.last_name.label_tag }} {{ form.last_name }}
+
+        <div class="text-end mt-4">
+          <button type="submit" class="btn text-white px-4" style="background-color: #FF6A00;">Сохранить</button>
         </div>
-        <div class="mb-3">
-          {{ form.email.label_tag }} {{ form.email }}
-        </div>
-        <div class="mb-3">
-          <label for="id_phone_number" class="form-label">Телефон:</label>
-          {{ form.phone_number }}
-        </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-      </form>
+        </form>
+
+        {% if request.user.userprofile %}
+          <div class="mt-4">
+            <div class="p-3 rounded-4 border border-2 w-100 text-dark"
+                 style="border-color: #FF6A00; background-color: #fff;">
+              <strong>Ваша персональная скидка:</strong> {{ request.user.userprofile.discount }}%
+            </div>
+          </div>
+        {% endif %}
     </div>
   </div>
 
-  <h2 class="mb-3">Мои заказы</h2>
+  <!-- Заказы -->
+  <h2 class="mb-3 text-center fw-semibold">Мои заказы</h2>
 
   {% if orders %}
-    <ul class="list-group">
-      {% for order in orders %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          {{ order.service.title }}
-          <span class="badge bg-secondary">{{ order.material }}</span>
-        </li>
-      {% endfor %}
-    </ul>
+  <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
+    <table class="table table-hover table-bordered align-middle m-0">
+      <thead class="table-light text-center">
+        <tr>
+          <th>Дата</th>
+          <th>Услуга</th>
+          <th>Материал</th>
+          <th>Размер (м)</th>
+          <th>Стоимость (₽)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.created_at|date:"d.m.Y" }}</td>
+          <td>{{ order.service.title }}</td>
+          <td>{{ order.get_material_display }}</td>
+          <td>
+            {% if order.width and order.height %}
+              {{ order.width }} × {{ order.height }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if order.estimated_price %}
+              {{ order.estimated_price|floatformat:2 }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% else %}
-    <div class="alert alert-info" role="alert">
-      Нет заказов
-    </div>
+  <div class="alert alert-warning text-center mt-4 rounded-4">
+    У вас пока нет заказов
+  </div>
   {% endif %}
 </div>
+
+<!-- Мини стиль -->
+<style>
+  table th, table td {
+    vertical-align: middle !important;
+  }
+  table td.text-end {
+    padding-right: 1rem;
+  }
+</style>
 {% endblock %}

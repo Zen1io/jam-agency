@@ -2,54 +2,68 @@
 {% block title %}О нас{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h1 class="mb-4">О нас</h1>
+<div class="container mt-5">
+  <h1 class="mb-4 text-center fw-bold">О нас</h1>
+    <!-- Введение -->
+  <div class="card border-0 shadow-sm mb-4 p-4 rounded-4">
+    <p>
+      Мы — <strong>креативное рекламное агентство</strong>, которое помогает брендам расти, выделяться и оставаться в памяти.
+      Наша команда специализируется на стратегическом маркетинге, дизайне, цифровых технологиях и креативных решениях.
+    </p>
+    <p class="mb-0">Мы верим, что каждая идея заслуживает шанса стать великой.</p>
+  </div>
 
-  <!-- Миссия -->
-  <p class="lead">
-    Наша миссия — делать города ярче, а бренды — узнаваемыми. Мы создаём наружную рекламу, которая работает.
-  </p>
-
-  <!-- Введение -->
-  <p>
-    Мы — креативное рекламное агентство, которое помогает брендам расти, выделяться и оставаться в памяти.
-    Наша команда специализируется на стратегическом маркетинге, дизайне, цифровых технологиях и креативных решениях.
-    Мы верим, что каждая идея заслуживает шанса стать великой.
-  </p>
-
-  <!-- Факты -->
-  <h4 class="mt-5">О нас в цифрах</h4>
-  <ul class="list-group list-group-flush mb-4">
-    <li class="list-group-item"><strong>10+</strong> лет на рынке</li>
-    <li class="list-group-item"><strong>500+</strong> реализованных проектов</li>
-    <li class="list-group-item"><strong>100%</strong> довольных клиентов</li>
-  </ul>
+  <!-- О нас в цифрах -->
+  <div class="card border-0 shadow-sm mb-4 p-4 rounded-4">
+    <h4 class="mb-3 text-orange">О нас в цифрах</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><span class="fw-bold text-orange">10+</span> лет на рынке</li>
+      <li class="list-group-item"><span class="fw-bold text-orange">500+</span> реализованных проектов</li>
+      <li class="list-group-item"><span class="fw-bold text-orange">100%</span> довольных клиентов</li>
+    </ul>
+  </div>
 
   <!-- Услуги -->
-  <h4>Что мы делаем</h4>
-  <p>
-    Мы изготавливаем вывески, баннеры, таблички, брендируем автомобили, создаём стенды и конструкции.
-    Все этапы — от идеи до монтажа — мы берем на себя.
-  </p>
+  <div class="card border-0 shadow-sm mb-4 p-4 rounded-4">
+    <h4 class="mb-3 text-orange">Что мы делаем</h4>
+    <p class="mb-0">
+      Мы изготавливаем вывески, баннеры, таблички, брендируем автомобили, создаём стенды и конструкции.
+      Все этапы — от идеи до монтажа — мы берём на себя.
+    </p>
+  </div>
 
   <!-- Почему мы -->
-  <h4>Почему выбирают нас</h4>
-  <ul class="list-group list-group-flush mb-4">
-    <li class="list-group-item">Собственное производство и контроль качества</li>
-    <li class="list-group-item">Работаем по всей республике и за её пределами</li>
-    <li class="list-group-item">Индивидуальный подход к каждому клиенту</li>
-    <li class="list-group-item">Оперативность и соблюдение сроков</li>
-  </ul>
+  <div class="card border-0 shadow-sm mb-4 p-4 rounded-4">
+    <h4 class="mb-3 text-orange">Почему выбирают нас</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">✔ Собственное производство и контроль качества</li>
+      <li class="list-group-item">✔ Работаем по всей республике и за её пределами</li>
+      <li class="list-group-item">✔ Индивидуальный подход к каждому клиенту</li>
+      <li class="list-group-item">✔ Оперативность и соблюдение сроков</li>
+    </ul>
+  </div>
 
   <!-- Карта -->
-  <h4 class="mt-5">Наше местоположение</h4>
-  <div id="map" style="height: 400px;" class="mb-4 rounded shadow"></div>
+  <div class="card border-0 shadow-sm mb-5 p-4 rounded-4">
+    <h4 class="mb-3 text-orange">Наше местоположение</h4>
+    <div id="map" style="height: 400px;" class="rounded shadow-sm"></div>
+  </div>
 </div>
+
+<style>
+  .text-orange {
+    color: #FF6A00;
+  }
+  .list-group-item {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+  }
+</style>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const map = L.map('map').setView([53.706945, 91.372705], 16);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
     }).addTo(map);

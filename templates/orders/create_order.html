@@ -1,86 +1,101 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load widget_tweaks %}
 {% block content %}
-
 <div class="container mt-5">
-  <div class="card shadow rounded-4">
-    <div class="card-body">
-      <h2 class="card-title text-center mb-4">Оформление заявки на: {{ service.title }}</h2>
+  <h2 class="mb-4">Оформление заявки на: {{ service.title }}</h2>
 
-      <form method="post" class="row g-3">
-        {% csrf_token %}
+  <form method="post" class="bg-light p-4 rounded shadow-sm">
+    {% csrf_token %}
 
-        <div class="col-12">
-          <label for="material" class="form-label fw-bold">Выбор материала</label>
-          {{ form.material|add_class:"form-select" }}
-        </div>
+    {% if form.errors %}
+      <div class="alert alert-danger">Пожалуйста, заполните профиль</div>
+    {% endif %}
 
-        <div class="col-md-6">
-          <label for="{{ form.client_name.id_for_label }}" class="form-label fw-bold">Имя клиента</label>
-          {{ form.client_name|add_class:"form-control" }}
-        </div>
-
-        <div class="col-md-6">
-          <label for="{{ form.phone.id_for_label }}" class="form-label fw-bold">Телефон</label>
-          {{ form.phone|add_class:"form-control" }}
-        </div>
-
-        <div class="col-12">
-          <label for="{{ form.comment.id_for_label }}" class="form-label fw-bold">Комментарий</label>
-          {{ form.comment|add_class:"form-control" }}
-        </div>
-
-        <div class="col-12 text-center">
-          <button type="submit" class="btn btn-primary btn-lg mt-3 px-5">Отправить заявку</button>
-        </div>
-      </form>
+    <div class="mb-3">
+      {{ form.material.label_tag }} {{ form.material }}
     </div>
-  </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.client_name.label_tag }} {{ form.client_name }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.phone.label_tag }} {{ form.phone }}
+      </div>
+      <div class="mb-3">
+        {{ form.discount_info.label_tag }}
+        {{ form.discount_info }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.width.label_tag }} {{ form.width }}
+        <small class="text-muted">в метрах</small>
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.height.label_tag }} {{ form.height }}
+        <small class="text-muted">в метрах</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      {{ form.comment.label_tag }} {{ form.comment }}
+    </div>
+
+    <div class="mb-3">
+      <p>Примерная стоимость
+        <span id="pricePreview" class="text-success fw-bold ms-2"></span>
+      </p>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Отправить заявку</button>
+  </form>
 </div>
 
+<!-- 💰 Расчёт примерной стоимости -->
 <script>
-  const materialOptions = {
-    billboard: ['banner_fabric', 'mesh', 'lightbox_film'],
-    stand: ['pvc', 'plastic', 'composite'],
-    showcase: ['vinyl', 'perforated_vinyl', 'uv_acrylic'],
-    car_wrap: ['vinyl_gloss', 'vinyl_matte', 'vinyl_special'],
-    facade_banner: ['reinforced_banner', 'mesh', 'blockout'],
-    letters: ['acrylic', 'plastic', 'metal', 'composite_led'],
+  const priceMap = {
+               'banner_fabric': 500,
+                'mesh': 450,
+                'lightbox_film': 700,
+                'pvc': 300,
+                'plastic': 350,
+                'composite': 600,
+                'vinyl': 400,
+                'perforated_vinyl': 450,
+                'uv_acrylic': 800,
+                'vinyl_gloss': 700,
+                'vinyl_matte': 750,
+                'vinyl_special': 900,
+                'reinforced_banner': 600,
+                'blockout': 650,
+                'acrylic': 900,
+                'metal': 1100,
+                'composite_led': 1200,
   };
 
-  const materialLabels = {
-    banner_fabric: 'Баннерная ткань',
-    mesh: 'Сетка',
-    lightbox_film: 'Лайтбокс-плёнка',
-    pvc: 'ПВХ',
-    plastic: 'Пластик',
-    composite: 'Композит',
-    vinyl: 'Винил',
-    perforated_vinyl: 'Перфорированная плёнка',
-    uv_acrylic: 'УФ печать на акриле',
-    vinyl_gloss: 'Винил глянец',
-    vinyl_matte: 'Винил матовый',
-    vinyl_special: 'Винил спецэффект',
-    reinforced_banner: 'Прочный баннер',
-    blockout: 'Блок-аут',
-    acrylic: 'Акрил',
-    metal: 'Металл',
-    composite_led: 'Композит с подсветкой',
-  };
-
-  const serviceCode = "{{ service.code|escapejs }}";
-  const materialSelect = document.getElementById('id_material');
-  if (materialOptions[serviceCode]) {
-    materialSelect.innerHTML = ''; // очистка
-    materialOptions[serviceCode].forEach(material => {
-      const option = document.createElement('option');
-      option.value = material;
-      option.text = materialLabels[material];
-      materialSelect.appendChild(option);
-    });
+  function updatePrice() {
+    const material = document.getElementById("id_material")?.value;
+    const width = parseFloat(document.getElementById("id_width")?.value || 0);
+    const height = parseFloat(document.getElementById("id_height")?.value || 0);
+    const base = priceMap[material] || 500;
+    const area = width * height;
+    const price = Math.round(area * base);
+    const preview = document.getElementById("pricePreview");
+    if (area > 0) {
+      preview.innerText = `~${price} ₽`;
+    } else {
+      preview.innerText = "";
+    }
   }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updatePrice();
+    ['id_material', 'id_width', 'id_height'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updatePrice);
+    });
+  });
 </script>
-
 {% endblock %}
-

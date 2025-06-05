@@ -11,6 +11,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('about/', AboutView.as_view(), name='about'),
     path('services/', include('pricing.urls')),
+    path('previews/', include('previews.urls')),
 ]
 
 if settings.DEBUG:

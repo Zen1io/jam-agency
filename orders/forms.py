@@ -14,23 +14,39 @@ MATERIAL_MAP = {
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ['service']  # service задается во view
+        exclude = ['service', 'client', 'estimated_price']
 
     def __init__(self, *args, service=None, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.service = service
         self.user = user
 
-        # ограничение по материалам
+        self.fields['client_name'].disabled = True
+        self.fields['phone'].disabled = True
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        # Ограничение по материалам
         if self.service and self.service.code in MATERIAL_MAP:
             allowed_materials = MATERIAL_MAP[self.service.code]
             self.fields['material'].choices = [
                 (key, label) for key, label in self.fields['material'].choices if key in allowed_materials
             ]
 
-        # автозаполнение имени и телефона
-        if self.user:
-            self.fields['client_name'].initial = f"{self.user.first_name} {self.user.last_name}".strip() or "Без имени"
-            profile = getattr(self.user, 'userprofile', None)
-            if profile:
-                self.fields['phone'].initial = profile.phone_number
+        # 🔄 Автозаполнение client_name и phone из user
+        if self.user and hasattr(self.user, 'first_name'):
+            self.fields['client_name'].initial = self.user.first_name
+        if self.user and hasattr(self.user, 'userprofile'):
+            profile = self.user.userprofile
+            self.fields['phone'].initial = getattr(profile, 'phone_number', '')# если есть userprofile.phone
+
+        if self.user and hasattr(self.user, 'userprofile'):
+            discount = self.user.userprofile.discount
+            self.fields['discount_info'] = forms.CharField(
+                initial=f"{discount}%",
+                disabled=True,
+                required=False,
+                label="Ваша скидка",
+                widget=forms.TextInput(attrs={'class': 'form-control'})
+            )

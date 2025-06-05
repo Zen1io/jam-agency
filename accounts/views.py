@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import UserProfile
 from .forms import ProfileForm
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+from orders.models import Order  # ✅ Импорт модели заказов
+
 @login_required
 def profile(request):
     user = request.user
@@ -18,9 +21,11 @@ def profile(request):
     else:
         form = ProfileForm(instance=user, initial={'phone_number': profile.phone_number})
 
-    orders = user.order_set.all() if hasattr(user, 'order_set') else []
+    # ✅ Получаем заказы, связанные с текущим пользователем
+    orders = Order.objects.filter(client=user).order_by('-created_at')
 
     return render(request, 'accounts/profile.html', {'form': form, 'orders': orders})
+
 
 def register(request):
     if request.method == 'POST':

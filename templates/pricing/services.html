@@ -4,19 +4,28 @@
 {% block title %}Наши услуги{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Наши услуги</h1>
+<h1 class="mb-5 text-center fw-bold">Наши услуги</h1>
+
 <div class="row g-4">
-    {% for service in services %}
-    <div class="col-md-4">
-        <div class="card h-100 text-center">
-            <img src="{{ service.image.url }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;" alt="{{ service.title }}">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ service.title }}</h5>
-                <p class="card-text">{{ service.description|default:"Описание будет позже..."|truncatewords:20 }}</p>
-                <a href="{% url 'create_order' service.id %}" class="btn btn-primary mt-auto">Оставить заявку</a>
-            </div>
-        </div>
+  {% for service in services %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm border-0 hover-shadow transition rounded-4 overflow-hidden">
+      <img src="{{ service.image.url }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;" alt="{{ service.title }}">
+      <div class="card-body d-flex flex-column text-center px-4">
+        <h5 class="card-title fw-semibold mb-2">{{ service.title }}</h5>
+        <p class="card-text text-muted mb-3">{{ service.description|default:"Описание будет позже..."|truncatewords:20 }}</p>
+        <a href="{% url 'create_order' service.id %}" class="btn mt-auto text-white" style="background-color: #FF6A00;">Оставить заявку</a>
+      </div>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
+
+<style>
+  .hover-shadow:hover {
+    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    transition: all 0.3s ease;
+  }
+</style>
 {% endblock %}
