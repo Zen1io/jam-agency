@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-dzg#m!+5ez7q8q+aoerlwpg#e$+0)f$fi2wim$%5^p5(9jiixd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'advagency.urls'
@@ -67,12 +68,8 @@ WSGI_APPLICATION = 'advagency.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jam_db',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',  # или IP, если БД на сервере
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',  # or postgresql, mysql, etc.
+        'NAME': BASE_DIR / 'db.sqlite3',         # for sqlite3
     }
 }
 
